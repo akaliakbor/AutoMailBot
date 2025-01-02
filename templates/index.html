@@ -11,7 +11,7 @@
 
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">App running</h1>
+        <h1 class="text-center">Automated Email Sender</h1>
 
         <div>
             <form method="POST" action="{% url 'show_data' %}">
@@ -40,7 +40,7 @@
 
                 <div class="mb-3">
                     <label for="mail_body" class="form-label">Mail body</label>
-                    <input type="text" class="form-control" id="mail_body" name="mail_body" aria-describedby="emailHelp">
+                    <textarea type="text" class="form-control" id="mail_body" name="mail_body" aria-describedby="emailHelp"></textarea>
                     <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                 </div>
 
@@ -58,6 +58,7 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
+
     </div>
 
 
