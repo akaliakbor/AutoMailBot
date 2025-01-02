@@ -11,6 +11,7 @@ sent_emails = []
 scheduler_thread = None
 terminate_scheduler = False
 email_count_limit = 0  # Maximum number of emails to send
+email_body_words = []  # List to store the body text as words
 
 def send_email(sender_email, sender_password, recipient_email, subject, body):
     global sent_emails
@@ -36,6 +37,7 @@ def run_scheduler():
     while not terminate_scheduler:
         schedule.run_pending()
         time.sleep(1)
+
         # Stop when the count limit is reached
         if len(sent_emails) >= email_count_limit:
             terminate_scheduler = True
@@ -45,7 +47,7 @@ def home(request):
     return render(request, 'index.html')
 
 def show_data(request):
-    global scheduler_thread, terminate_scheduler, sent_emails, email_count_limit
+    global scheduler_thread, terminate_scheduler, sent_emails, email_count_limit, email_body_words
 
     if request.method == 'POST':
         sender = request.POST['sender']
@@ -56,12 +58,19 @@ def show_data(request):
         time_interval = int(request.POST['time'])  # Time in seconds
         email_count_limit = int(request.POST['email_count'])  # Count of emails to send
 
+        # Split the email body into words and store them in the global list
+        email_body_words = message.split()
+
         sent_emails = []
         terminate_scheduler = False
 
         # Define the job
         def job():
-            send_email(sender, app_password, receiver, subject, message)
+            if email_body_words:  # Only send an email if there are still words left
+                body = ' '.join(email_body_words)  # Join the remaining words to form the body
+                send_email(sender, app_password, receiver, subject, body)
+                # Remove the first word from the body text
+                email_body_words.pop(0)
 
         # Schedule the email
         schedule.every(time_interval).seconds.do(job)
@@ -73,7 +82,7 @@ def show_data(request):
 
         return redirect('email_status')  # Redirect to email_status view
     else:
-        return redirect('home')
+        return redirect('home')  # Redirect to home if not a POST request
 
 def email_status(request):
     global terminate_scheduler
