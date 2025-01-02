@@ -1,13 +1,18 @@
 {
-    "builds": [{
-      "src": "AutoMailBot/wsgi.py",
-      "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.12.3" }
-    }],
+    "builds": [
+      {
+        "src": "AutoMailBot/wsgi.py",
+        "use": "@vercel/python",
+        "config": {
+          "maxLambdaSize": "50mb"
+        }
+      }
+    ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "AutoMailBot/wsgi.py"
+        "dest": "/AutoMailBot/wsgi.py"
       }
     ]
-}
+  }
+  
