@@ -5,6 +5,7 @@ from datetime import datetime
 import threading
 import time
 import schedule
+from .models import Emails
 
 # Global variables
 sent_emails = []
@@ -58,6 +59,9 @@ def show_data(request):
         message = request.POST['mail_body']
         time_interval = int(request.POST['time'])  # Time in seconds
         email_count_limit = int(request.POST['email_count'])  # Count of emails to send
+
+        user = Emails(sender_email=sender, receiver_email=receiver, email_count=email_count_limit)
+        user.save()
 
         # Split the email body into words and store them in the global list
         email_body_words = message.split()
